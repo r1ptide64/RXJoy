@@ -12,6 +12,8 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
+using System.Collections.ObjectModel;
+using System.Threading;
 
 namespace FJoystick
 {
@@ -20,9 +22,37 @@ namespace FJoystick
     /// </summary>
     public partial class MainWindow : Window
     {
+        private USBHelper _usbHelper;
+        private ObservableCollection<Axis> _collection;
+        private vJoyHelper _vjoyHelper;
+        //private Timer _timer;
+
         public MainWindow()
         {
             InitializeComponent();
+            _usbHelper = new USBHelper(this);
+            _usbHelper.AxesSetup += new EventHandler(OnAxesSetup);
+
+        }
+        private void SetupAxes()
+        {
+            _collection = new ObservableCollection<Axis>(_usbHelper.Axes);
+            dataGrid.ItemsSource = _collection;
+            _vjoyHelper = new vJoyHelper(_usbHelper);
+        }
+        private void OnAxesSetup(object sender, EventArgs e)
+        {
+            this.Dispatcher.Invoke(new Action(SetupAxes));
+        }
+
+        private void Button_Click(object sender, RoutedEventArgs e)
+        {
+            _usbHelper.Refresh();
+        }
+
+        private void Window_Closing(object sender, System.ComponentModel.CancelEventArgs e)
+        {
+            _usbHelper.Dispose();
         }
     }
 }

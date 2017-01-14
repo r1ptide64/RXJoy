@@ -5,8 +5,12 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:FJoystick"
         mc:Ignorable="d"
-        Title="MainWindow" Height="350" Width="525">
-    <Grid>
-        
-    </Grid>
+        Title="MainWindow" Height="350" Width="525"
+        Closing="Window_Closing">
+    <StackPanel>
+        <DataGrid x:Name="dataGrid"></DataGrid>
+        <Button Click="Button_Click">
+            <TextBlock Text="Refresh" />
+        </Button>
+    </StackPanel>
 </Window>
